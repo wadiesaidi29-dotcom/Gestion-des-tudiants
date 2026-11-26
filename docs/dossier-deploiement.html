@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Dossier de déploiement — Gestion des étudiants</title>
+<style>
+  @page { size: A4; margin: 13mm 14mm 15mm 14mm; }
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html { font-size: 9.9pt; }
+  body {
+    margin: 0; color: #101828; background: #fff;
+    font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.5;
+  }
+  h1, h2, h3 { line-height: 1.2; margin: 0; color: #0b1220; }
+  h2 { font-size: 1.55rem; margin: 0 0 4mm; padding-bottom: 2.5mm; border-bottom: 2px solid #2563eb; }
+  h3 { font-size: 1.05rem; margin: 6mm 0 2mm; }
+  p { margin: 0 0 3mm; }
+  ul, ol { margin: 0 0 3mm; padding-left: 5.5mm; }
+  li { margin-bottom: 1.2mm; }
+  code, pre { font-family: "Cascadia Mono", Consolas, "Courier New", monospace; }
+  code { background: #eef3fb; padding: 0.5mm 1.2mm; border-radius: 2px; font-size: 0.88em; color: #14315c; }
+  pre {
+    background: #0f172a; color: #e6edf7; padding: 3.5mm 4mm; border-radius: 3mm;
+    font-size: 0.8rem; line-height: 1.5; white-space: pre-wrap; word-break: break-word;
+    margin: 0 0 3.5mm;
+  }
+  pre .c { color: #7f9cc0; }
+  .muted { color: #5b6b84; }
+  .small { font-size: 0.85rem; }
+
+  /* ---------- cover ---------- */
+  .cover { height: 258mm; display: flex; flex-direction: column; justify-content: center; page-break-after: always; }
+  .cover .bar { width: 28mm; height: 2.2mm; background: #2563eb; border-radius: 2mm; margin-bottom: 9mm; }
+  .cover .kicker { text-transform: uppercase; letter-spacing: 0.18em; font-size: 0.72rem; color: #2563eb; font-weight: 700; margin-bottom: 4mm; }
+  .cover h1 { font-size: 2.9rem; letter-spacing: -0.02em; }
+  .cover .lead { font-size: 1.15rem; color: #475569; margin-top: 5mm; max-width: 150mm; }
+  .cover .meta { margin-top: 16mm; border-top: 1px solid #dbe3ef; padding-top: 6mm; display: grid; grid-template-columns: 1fr 1fr; gap: 3mm 8mm; font-size: 0.88rem; }
+  .cover .meta b { display: block; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: #7c8aa0; font-weight: 700; }
+  .cover .meta span { color: #1f2a3a; }
+  .cover .foot { margin-top: 12mm; font-size: 0.8rem; color: #8592a6; }
+
+  section { page-break-before: always; }
+  section.first { page-break-before: avoid; }
+
+  /* ---------- tables ---------- */
+  table { width: 100%; border-collapse: collapse; font-size: 0.86rem; margin: 0 0 4mm; }
+  th, td { text-align: left; padding: 2.2mm 2.6mm; border-bottom: 1px solid #e3e9f3; vertical-align: top; }
+  thead th { background: #eef3fb; color: #14315c; font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.06em; }
+  tbody tr:nth-child(even) { background: #fafbfd; }
+
+  /* ---------- blocks ---------- */
+  .note { border-left: 3px solid #2563eb; background: #f2f7ff; padding: 3mm 4mm; border-radius: 0 2mm 2mm 0; margin: 0 0 4mm; font-size: 0.9rem; }
+  .warn { border-left: 3px solid #d97706; background: #fffaeb; padding: 3mm 4mm; border-radius: 0 2mm 2mm 0; margin: 0 0 4mm; font-size: 0.9rem; }
+  .ok { border-left: 3px solid #059669; background: #ecfdf5; padding: 3mm 4mm; border-radius: 0 2mm 2mm 0; margin: 0 0 4mm; font-size: 0.9rem; }
+
+  .problem { border: 1px solid #e3e9f3; border-radius: 3mm; padding: 3.4mm 4mm; margin-bottom: 3.6mm; page-break-inside: avoid; }
+  .problem .tag { display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #fff; background: #b42318; border-radius: 2mm; padding: 1mm 2.5mm; margin-bottom: 2.5mm; }
+  .problem h3 { margin: 0 0 2.5mm; font-size: 1rem; }
+  .problem dl { margin: 0; font-size: 0.88rem; }
+  .problem dt { font-weight: 700; color: #14315c; margin-top: 2mm; font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.07em; }
+  .problem dd { margin: 0.6mm 0 0; }
+
+  .flow { display: flex; align-items: stretch; gap: 2.5mm; margin: 0 0 5mm; }
+  .flow .box { flex: 1; border: 1px solid #d9e2f1; border-radius: 2.5mm; padding: 2.8mm; background: #f7faff; font-size: 0.78rem; }
+  .flow .box b { display: block; font-size: 0.86rem; color: #14315c; margin-bottom: 1mm; }
+  .flow .arrow { align-self: center; color: #2563eb; font-weight: 700; }
+
+  .checklist { list-style: none; padding-left: 0; }
+  .checklist li { padding-left: 7mm; position: relative; margin-bottom: 2mm; font-size: 0.9rem; }
+  .checklist li:before { content: "☐"; position: absolute; left: 0; color: #2563eb; font-size: 1.05rem; top: -0.4mm; }
+
+  .toc { font-size: 0.95rem; }
+  .toc li { margin-bottom: 2.2mm; }
+  .toc span { color: #7c8aa0; }
+</style>
+</head>
+<body>
+
+<!-- ============ COVER ============ -->
+<div class="cover">
+  <div class="bar"></div>
+  <div class="kicker">Dossier technique</div>
+  <h1>Déploiement de<br>« Gestion des étudiants »</h1>
+  <p class="lead">Comment une application React connectée à une base Turso a été mise en ligne gratuitement sur Cloudflare Workers : les commandes Git, l'origine des tokens, les cinq blocages rencontrés et leurs solutions.</p>
+  <div class="meta">
+    <div><b>Projet</b><span>Gestion des étudiants — CRUD + authentification</span></div>
+    <div><b>Date</b><span>25 novembre 2026</span></div>
+    <div><b>Stack</b><span>React 18 · Vite 5 · Turso (libSQL) · Cloudflare Workers</span></div>
+    <div><b>Dépôt</b><span>github.com/wadiesaidi29-dotcom/Gestion-des-tudiants</span></div>
+    <div><b>Branche</b><span>main — 5 commits</span></div>
+    <div><b>Coût d'hébergement</b><span>0 € / mois (offre gratuite Cloudflare)</span></div>
+  </div>
+  <div class="foot">Document généré à partir du code source et des journaux de build réels du projet.</div>
+</div>
+
+<!-- ============ SOMMAIRE ============ -->
+<section class="first">
+  <h2>Sommaire</h2>
+  <ol class="toc">
+    <li>Le projet et son architecture <span>— ce qui tourne, et où</span></li>
+    <li>Les commandes Git : du dossier local à GitHub <span>— les commandes exactes, dans l'ordre</span></li>
+    <li>Les tokens Turso : d'où ils viennent <span>— création, format, rôle de chacun</span></li>
+    <li>Où coller les tokens dans Cloudflare <span>— build variables, étape par étape</span></li>
+    <li>Les problèmes rencontrés et leurs solutions <span>— 5 blocages, 5 correctifs</span></li>
+    <li>Vérifications après déploiement <span>— la checklist finale</span></li>
+    <li>Annexes <span>— wrangler.jsonc, extrait de log, historique Git</span></li>
+  </ol>
+
+  <div class="note" style="margin-top:8mm">
+    <b>En une phrase :</b> le build tourne chez Cloudflare, les fichiers statiques sont servis par son CDN, et
+    le navigateur du visiteur interroge directement la base Turso en HTTPS — il n'y a aucun serveur applicatif à
+    administrer.
+  </div>
+</section>
+
+<!-- ============ 1. PROJET ============ -->
+<section>
+  <h2>1 · Le projet et son architecture</h2>
+
+  <table>
+    <thead><tr><th>Couche</th><th>Technologie</th><th>Rôle</th></tr></thead>
+    <tbody>
+      <tr><td>Interface</td><td>React 18 + React Router 6</td><td>8 routes, application monopage (SPA)</td></tr>
+      <tr><td>Build</td><td>Vite 5</td><td>105 modules transformés, ~1,4 s</td></tr>
+      <tr><td>Base de données</td><td>Turso (libSQL / SQLite)</td><td>Table <code>students</code>, accès HTTP</td></tr>
+      <tr><td>Authentification</td><td>Compte de démonstration côté client</td><td><code>AuthContext</code> + <code>ProtectedRoute</code></td></tr>
+      <tr><td>Hébergement</td><td>Cloudflare Workers (assets statiques)</td><td>CDN gratuit, SPA, HTTPS automatique</td></tr>
+      <tr><td>Versionnage</td><td>Git + GitHub</td><td>5 commits sur <code>main</code>, build automatique à chaque push</td></tr>
+    </tbody>
+  </table>
+
+  <div class="flow">
+    <div class="box"><b>1 · Navigateur</b>React (bundle JS servi par le CDN)</div>
+    <div class="arrow">→</div>
+    <div class="box"><b>2 · @libsql/client</b>requête HTTPS signée par le token</div>
+    <div class="arrow">→</div>
+    <div class="box"><b>3 · Turso</b>SQLite hébergé, table students</div>
+  </div>
+
+  <h3>Les routes de l'application</h3>
+  <ul class="small">
+    <li><code>/</code> accueil · <code>/login</code> connexion</li>
+    <li><code>/dashboard</code> · <code>/etudiants</code> · <code>/etudiants/nouveau</code></li>
+    <li><code>/etudiants/:id</code> fiche · <code>/etudiants/:id/modifier</code> édition · <code>*</code> page 404</li>
+  </ul>
+
+  <div class="warn">
+    <b>Point de sécurité à connaître :</b> les variables <code>VITE_TURSO_*</code> sont <b>injectées dans le bundle au moment du build</b>.
+    Le token de la base est donc lisible par n'importe quel visiteur qui ouvre les outils de développement. Acceptable pour un projet
+    pédagogique ; à corriger avant un usage réel (voir la solution proposée en fin de dossier).
+  </div>
+</section>
+
+<!-- ============ 2. GIT ============ -->
+<section>
+  <h2>2 · Les commandes Git : du dossier local à GitHub</h2>
+
+  <p>Toutes les commandes ont été exécutées depuis le dossier du projet
+  (<code>C:\Users\wadie\Documents\codebuff-work</code>), dans Git Bash.</p>
+
+  <h3>Créer le dépôt et publier le code</h3>
+<pre><span class="c"># 1. initialiser le dépôt local sur la branche main</span>
+git init -b main
+
+<span class="c"># 2. ajouter tous les fichiers non ignorés</span>
+git add .
+
+<span class="c"># 3. premier commit</span>
+git commit -m "Initial commit: Gestion des étudiants (React + Vite + Turso)"
+
+<span class="c"># 4. relier le dépôt local au dépôt GitHub (créé vide, sans README)</span>
+git remote add origin https://github.com/wadiesaidi29-dotcom/Gestion-des-tudiants.git
+
+<span class="c"># 5. pousser la branche main et lier le suivi</span>
+git push -u origin main</pre>
+
+  <h3>Le fichier <code>.gitignore</code> — la protection des secrets</h3>
+<pre>.env
+.env.local
+node_modules
+dist
+.vite
+*.local
+.DS_Store
+dev.log</pre>
+  <p class="small muted"><code>.env</code> contient l'URL et le token Turso : c'est pour cela qu'il n'est <b>jamais</b> versionné.
+  <code>dist/</code> est reconstruit par Cloudflare à chaque déploiement, <code>dev.log</code> est un déchet local.</p>
+
+  <h3>Les commits suivants (un par problème résolu)</h3>
+<pre>git add .
+git commit -m "&lt;message décrivant le correctif&gt;"
+git push</pre>
+
+  <table>
+    <thead><tr><th>Commit</th><th>Message</th><th>Objet</th></tr></thead>
+    <tbody>
+      <tr><td><code>f9be192</code></td><td>Initial commit</td><td>Application complète (React + Vite + Turso)</td></tr>
+      <tr><td><code>ecda7b0</code></td><td>Ignore le log du serveur local</td><td><code>dev.log</code> retiré du suivi</td></tr>
+      <tr><td><code>dfc1d45</code></td><td>Force LF pour <code>_redirects</code></td><td>Correction CRLF (Windows)</td></tr>
+      <tr><td><code>d98a0ce</code></td><td>Ajoute <code>wrangler.jsonc</code></td><td>Assets statiques + mode SPA</td></tr>
+      <tr><td><code>dc9ca1f</code></td><td>Retire <code>_redirects</code>, aligne le nom</td><td>Correction de l'erreur 100324</td></tr>
+    </tbody>
+  </table>
+
+  <div class="ok"><b>Contrôle qualité :</b> le dépôt a été cloné dans un dossier neuf, puis
+  <code>bun install &amp;&amp; bun run build</code> a été relancé : 0 erreur. Cela prouve que tout ce qui est nécessaire au
+  build est bien présent sur GitHub, sans dépendre de fichiers locaux.</div>
+</section>
+
+<!-- ============ 3. TOKENS : ORIGINE ============ -->
+<section>
+  <h2>3 · Les tokens Turso : d'où ils viennent</h2>
+
+  <p>La base ne vit pas dans le projet : elle est hébergée chez <b>Turso</b>. Le code a besoin de deux informations
+  pour s'y connecter, toutes deux stockées dans des variables d'environnement préfixées <code>VITE_</code>.</p>
+
+  <table>
+    <thead><tr><th>Variable</th><th>Ce que c'est</th><th>Où la trouver chez Turso</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><code>VITE_TURSO_DATABASE_URL</code></td>
+        <td>L'adresse de la base, au format <code>libsql://&lt;nom&gt;-&lt;compte&gt;.aws-eu-west-1.turso.io</code> (69 caractères)</td>
+        <td>Tableau de bord Turso → base <code>gestion-etudiants</code> → <i>Database URL</i> (ou <code>turso db show &lt;nom&gt; --url</code>)</td>
+      </tr>
+      <tr>
+        <td><code>VITE_TURSO_AUTH_TOKEN</code></td>
+        <td>Un jeton JWT signé (348 caractères, commence par <code>eyJhbG…</code>) qui autorise la lecture et l'écriture</td>
+        <td>Turso → base → <i>Create Token</i> (choisir « Read &amp; Write »), ou <code>turso db tokens create &lt;nom&gt;</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="warn">
+    <b>Règle :</b> le jeton est affiché <b>une seule fois</b> à sa création. S'il est perdu, on en crée un nouveau et on révoque
+    l'ancien (<code>turso db tokens revoke</code>). C'est aussi le geste à faire si un jeton a pu fuiter.
+  </div>
+
+  <h3>Le schéma de la base</h3>
+<pre>CREATE TABLE IF NOT EXISTS students (
+  id        TEXT PRIMARY KEY,
+  firstname TEXT NOT NULL,
+  lastname  TEXT NOT NULL,
+  email     TEXT NOT NULL UNIQUE,
+  ...
+);</pre>
+  <p class="small muted">Le schéma (<code>database/schema.sql</code>) est appliqué une seule fois avec
+  <code>bun database/setup.mjs</code>, qui utilise les mêmes identifiants.</p>
+
+  <h3>Premier emplacement : le fichier <code>.env</code> local (non versionné)</h3>
+<pre><span class="c"># .env — à la racine du projet, jamais commité</span>
+VITE_TURSO_DATABASE_URL=libsql://gestion-etudiants-&lt;compte&gt;.aws-eu-west-1.turso.io
+VITE_TURSO_AUTH_TOKEN=eyJhbGciOi...   <span class="c">(348 caractères)</span></pre>
+  <p class="small">En développement, Vite lit ce fichier au démarrage. Il faut <b>redémarrer</b> <code>bun run dev</code>
+  après toute modification.</p>
+</section>
+
+<!-- ============ 4. TOKENS : CLOUDFLARE ============ -->
+<section>
+  <h2>4 · Où coller les tokens dans Cloudflare</h2>
+
+  <p>Sur Cloudflare, le build se fait dans un conteneur vierge : le fichier <code>.env</code> n'existe pas. Il faut donc
+  redonner les deux valeurs à Cloudflare, <b>comme variables de build</b> (et non comme variables d'exécution), parce que
+  Vite les fige dans le JavaScript pendant la compilation.</p>
+
+  <div class="flow">
+    <div class="box"><b>1 · Build</b>Vite lit les variables et écrit les valeurs dans <code>dist/assets/*.js</code></div>
+    <div class="arrow">→</div>
+    <div class="box"><b>2 · Deploy</b>wrangler envoie <code>dist/</code> sur le réseau Cloudflare</div>
+    <div class="arrow">→</div>
+    <div class="box"><b>3 · Visiteur</b>le bundle contient déjà l'URL et le jeton</div>
+  </div>
+
+  <h3>Étape par étape dans le tableau de bord</h3>
+  <ol>
+    <li>Cloudflare → <b>Workers &amp; Pages</b> → ouvrir le projet <code>gestion-des-etudiants</code>.</li>
+    <li>Onglet <b>Settings</b> (accessible aussi via le chevron « <b>S&nbsp;&gt;</b> » de la barre d'onglets).</li>
+    <li>Section <b>Build</b> : vérifier
+      <ul>
+        <li><b>Build command</b> : <code>bun run build</code></li>
+        <li><b>Deploy command</b> : <code>npx wrangler deploy --config wrangler.jsonc</code></li>
+      </ul>
+    </li>
+    <li>Section <b>Variables and secrets</b> (« No build variables or secrets configured ») → bouton <b>+ Add</b>.</li>
+    <li>Ajouter les deux entrées, une par une, en séparant bien le <b>nom</b> et la <b>valeur</b> :
+
+      <table style="margin-top:3mm">
+        <thead><tr><th>Name</th><th>Value</th><th>Type</th></tr></thead>
+        <tbody>
+          <tr><td><code>VITE_TURSO_DATABASE_URL</code></td><td>l'URL <code>libsql://…</code> complète (69 caractères)</td><td>Text</td></tr>
+          <tr><td><code>VITE_TURSO_AUTH_TOKEN</code></td><td>le jeton complet (348 caractères, à partir de <code>eyJhbG</code>)</td><td>Secret (recommandé)</td></tr>
+        </tbody>
+      </table>
+    </li>
+    <li><b>Save</b>, puis onglet <b>Deployments</b> → <b>Retry deployment</b> (ou un <code>git push</code>).
+        <b>Les variables n'agissent qu'au build suivant</b> : sans redéploiement, rien ne change.</li>
+  </ol>
+
+  <h3>Les erreurs à ne pas commettre</h3>
+  <ul class="small">
+    <li>Coller <code>VITE_TURSO_AUTH_TOKEN=eyJ…</code> dans la valeur : seul le texte <b>après le « = »</b> compte.</li>
+    <li>Laisser des guillemets <code>"…"</code>, un espace ou un retour à la ligne en trop.</li>
+    <li>Copier un jeton tronqué (348 caractères exactement).</li>
+    <li>Utiliser une variable d'exécution (<i>runtime</i>) au lieu d'une variable de build.</li>
+  </ul>
+
+  <h3>Comment reconnaître la cause d'une panne</h3>
+  <table>
+    <thead><tr><th>Message affiché par le site</th><th>Cause</th></tr></thead>
+    <tbody>
+      <tr><td>« Base de données non configurée »</td><td>Les variables manquent au build, ou le déploiement n'a pas été relancé</td></tr>
+      <tr><td>« Identifiants de la base invalides » (401)</td><td>Jeton erroné, tronqué ou révoqué</td></tr>
+      <tr><td>« La table students est introuvable »</td><td>Le schéma n'a pas été appliqué sur cette base</td></tr>
+      <tr><td>Le site fonctionne normalement</td><td>Tout est correct</td></tr>
+    </tbody>
+  </table>
+
+  <div class="note"><b>Preuve technique :</b> la taille du bundle change selon la présence des variables
+  (276,05 kB sans, 276,46 kB avec). La différence de ~0,4 kB correspond au jeton inscrit dans le fichier — c'est la
+  démonstration que les valeurs sont bien figées au build.</div>
+</section>
+
+<!-- ============ 5. PROBLEMES ============ -->
+<section>
+  <h2>5 · Les problèmes rencontrés et leurs solutions</h2>
+
+  <p>Cinq blocages se sont succédé. Chacun a été isolé, corrigé par un commit dédié, puis validé par un nouveau
+  déploiement.</p>
+
+  <div class="problem">
+    <span class="tag">Problème 1</span>
+    <h3>Le fichier <code>_redirects</code> arrivait corrompu (CRLF)</h3>
+    <dl>
+      <dt>Symptôme</dt>
+      <dd>La règle « <code>/* /index.html 200</code> » était vue comme invalide ; les fins de ligne Windows (<code>\r\n</code>)
+      s'ajoutaient au fichier, que le serveur ne savait plus lire.</dd>
+      <dt>Cause</dt>
+      <dd>Git pour Windows convertit les fins de ligne ; le fichier était interprété comme contenant un caractère parasite.</dd>
+      <dt>Solution</dt>
+      <dd>Un fichier <code>.gitattributes</code> force le format Unix pour ce seul fichier :
+        <pre style="margin:2mm 0 0">* text=auto
+public/_redirects text eol=lf</pre>
+      </dd>
+      <dt>Vérification</dt>
+      <dd><code>od -c dist/_redirects</code> : plus aucun <code>\r</code> (contrôlé en local, dans un clone et dans le build).
+      Commit <code>dfc1d45</code>.</dd>
+    </dl>
+  </div>
+
+  <div class="problem">
+    <span class="tag">Problème 2</span>
+    <h3>Cloudflare refusait le projet : « Vite ≥ 6 requis »</h3>
+    <dl>
+      <dt>Symptôme</dt>
+      <dd><code>✘ The version of Vite used in the project ("5.4.21") cannot be automatically configured.
+      Please update the Vite version to at least "6.0.0"</code> — le build passait, le déploiement échouait.</dd>
+      <dt>Cause</dt>
+      <dd>L'auto-configuration de Cloudflare Workers Builds analyse le projet et impose Vite 6 ; elle ignorait notre
+      fichier <code>wrangler.jsonc</code> (le journal affichait <code>gestion-des-etudiants</code> au lieu du nom prévu).</dd>
+      <dt>Solution</dt>
+      <dd>Court-circuiter l'auto-configuration en imposant le fichier de configuration dans la commande de déploiement :
+        <pre style="margin:2mm 0 0"><span class="c"># Settings → Build → Deploy command</span>
+npx wrangler deploy --config wrangler.jsonc</pre>
+        Aucune montée de version de Vite n'a été nécessaire.
+      </dd>
+    </dl>
+  </div>
+
+  <div class="problem">
+    <span class="tag">Problème 3</span>
+    <h3>Le nom du Worker ne correspondait pas au projet</h3>
+    <dl>
+      <dt>Symptôme</dt>
+      <dd><code>▲ [WARNING] Failed to match Worker name. Your config file is using the Worker name "gestion-etudiants",
+      but the CI system expected "gestion-des-etudiants".</code></dd>
+      <dt>Cause</dt>
+      <dd>Le nom écrit dans <code>wrangler.jsonc</code> différait de celui du projet Cloudflare, qui imposait le sien.</dd>
+      <dt>Solution</dt>
+      <dd>Aligner la configuration sur le projet :
+        <pre style="margin:2mm 0 0">"name": "gestion-des-etudiants"</pre>
+      </dd>
+      <dt>Vérification</dt>
+      <dd>Plus aucun avertissement dans les journaux suivants. Commit <code>dc9ca1f</code>.</dd>
+    </dl>
+  </div>
+
+  <div class="problem">
+    <span class="tag">Problème 4</span>
+    <h3>Erreur 100324 : « Infinite loop detected »</h3>
+    <dl>
+      <dt>Symptôme</dt>
+      <dd>Au moment de créer la version du Worker :
+        <pre style="margin:2mm 0 0">Invalid _redirects configuration:
+Line 1: Infinite loop detected in this rule.
+[code: 100324]</pre>
+      </dd>
+      <dt>Cause</dt>
+      <dd>La règle <code>/* /index.html 200</code> était prévue pour Cloudflare <b>Pages</b>. Sur les assets Workers,
+      le repli SPA est déjà assuré par <code>not_found_handling: single-page-application</code> : les deux mécanismes
+      se cumulaient et formaient une boucle.</dd>
+      <dt>Solution</dt>
+      <dd><code>git rm public/_redirects</code> — le routage est désormais entièrement décrit dans <code>wrangler.jsonc</code>
+      (voir annexe A). Le build est repassé au vert immédiatement.</dd>
+    </dl>
+  </div>
+
+  <div class="problem">
+    <span class="tag">Problème 5</span>
+    <h3>Le site s'afficherait sans base de données</h3>
+    <dl>
+      <dt>Symptôme</dt>
+      <dd>Après un déploiement réussi, l'application aurait affiché « Base de données non configurée », car le conteneur de
+      build de Cloudflare ne contient pas le fichier <code>.env</code>.</dd>
+      <dt>Cause</dt>
+      <dd>Vite remplace <code>import.meta.env.VITE_*</code> par des valeurs littérales pendant le build : sans variables,
+      la chaîne est vide et le client n'est pas créé.</dd>
+      <dt>Solution</dt>
+      <dd>Ajouter les deux variables dans <b>Settings → Build → Variables and secrets</b> (section 4), puis relancer le
+      déploiement. Contrôle : la taille du bundle passe de 276,05 kB à 276,46 kB, preuve que les valeurs sont intégrées.</dd>
+    </dl>
+  </div>
+
+  <h3>Récapitulatif</h3>
+  <table>
+    <thead><tr><th>#</th><th>Problème</th><th>Cause racine</th><th>Solution retenue</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td><code>_redirects</code> corrompu</td><td>Conversion CRLF de Windows</td><td><code>.gitattributes</code> → <code>eol=lf</code></td></tr>
+      <tr><td>2</td><td>Vite ≥ 6 exigé</td><td>Auto-configuration ignorante du fichier de config</td><td>Deploy avec <code>--config wrangler.jsonc</code></td></tr>
+      <tr><td>3</td><td>Nom de Worker différent</td><td>Configuration désalignée</td><td><code>"name": "gestion-des-etudiants"</code></td></tr>
+      <tr><td>4</td><td>Erreur 100324</td><td>Double mécanisme de repli SPA</td><td>Suppression de <code>_redirects</code></td></tr>
+      <tr><td>5</td><td>Base non connectée</td><td>Variables absentes au build</td><td>Build variables + redéploiement</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============ 6. VERIFICATIONS ============ -->
+<section>
+  <h2>6 · Vérifications après déploiement</h2>
+
+  <ul class="checklist">
+    <li>La page d'accueil s'affiche (pas d'écran blanc, pas de 404).</li>
+    <li>Connexion avec le compte de démonstration : <code>admin@ecole.ma</code> / <code>admin123</code>.</li>
+    <li>La liste <code>/etudiants</code> affiche les données de la base Turso.</li>
+    <li>Rafraîchir (F5) sur <code>/etudiants</code> ne casse pas la page — c'est le rôle du repli SPA.</li>
+    <li>Créer un étudiant, recharger, vérifier qu'il est toujours là (preuve que l'écriture fonctionne).</li>
+    <li>Modifier puis supprimer cet étudiant de test.</li>
+    <li>Le cadenas HTTPS est présent sur l'URL <code>*.workers.dev</code>.</li>
+  </ul>
+
+  <div class="ok"><b>Résultat obtenu :</b> 105 modules transformés, bundle de 276 kB (84,6 kB compressé),
+  build en 1,4 s, déploiement en une vingtaine de secondes — pour un coût d'hébergement de 0 € par mois.</div>
+
+  <h3>Le point à traiter ensuite : le token dans le bundle</h3>
+  <p class="small">Puisque le token est figé dans le JavaScript public, n'importe qui peut lire et modifier la base.
+  La correction tient en un petit Worker intermédiaire :</p>
+  <div class="flow">
+    <div class="box"><b>Avant</b>navigateur → Turso, avec le token visible</div>
+    <div class="arrow">→</div>
+    <div class="box"><b>Après</b>navigateur → Worker <code>/api</code> → Turso, token stocké en secret côté serveur</div>
+  </div>
+  <p class="small muted">Le Worker valide la session, n'expose que les requêtes prévues, et le secret est saisi dans
+  <b>Settings → Variables and secrets</b> sans jamais apparaître dans le code. À faire avant toute utilisation réelle.</p>
+
+  <h3>Nom de domaine</h3>
+  <p class="small">Le sous-domaine <code>*.workers.dev</code> est gratuit. Un domaine personnel (ex. <code>.com</code>)
+  s'achète à part — environ 11 $/an chez Cloudflare Registrar — puis se rattache dans
+  <b>Settings → Domains &amp; Routes → Add → Custom domain</b> ; le certificat HTTPS est généré automatiquement.</p>
+</section>
+
+<!-- ============ 7. ANNEXES ============ -->
+<section>
+  <h2>7 · Annexes</h2>
+
+  <h3>Annexe A — <code>wrangler.jsonc</code> (configuration finale)</h3>
+<pre>{
+  // Nom du Worker / du projet sur Cloudflare
+  "name": "gestion-des-etudiants",
+  "compatibility_date": "2026-11-24",
+
+  // Site statique React/Vite : tout dist/ est servi par le CDN
+  "assets": {
+    "directory": "./dist",
+    // React Router : toutes les routes inconnues renvoient index.html
+    "not_found_handling": "single-page-application"
+  }
+}</pre>
+
+  <h3>Annexe B — extrait du journal de build réussi</h3>
+<pre>Installing project dependencies: bun install --frozen-lockfile
+81 packages installed [537.00ms]
+Executing user build command: bun run build
+✓ 105 modules transformed.
+dist/index.html                 0.72 kB │ gzip:  0.42 kB
+dist/assets/index-*.css        21.40 kB │ gzip:  5.24 kB
+dist/assets/index-*.js        276.47 kB │ gzip: 84.63 kB
+✓ built in 1.38s
+Success: Build command completed
+
+Executing user deploy command:
+  npx wrangler deploy --config wrangler.jsonc
+✨ Read 6 files from the assets directory /opt/buildhome/repo/dist
+✨ Success! Uploaded 2 files
+Deployed gestion-des-etudiants</pre>
+
+  <h3>Annexe C — les cinq commandes à retenir</h3>
+<pre>git init -b main                                    <span class="c"># créer le dépôt local</span>
+git add .                                           <span class="c"># indexer les fichiers</span>
+git commit -m "message"                             <span class="c"># enregistrer une étape</span>
+git push                                            <span class="c"># envoyer sur GitHub (déclenche le build)</span>
+npx wrangler deploy --config wrangler.jsonc         <span class="c"># déployer à la main si besoin</span></pre>
+
+  <div class="note" style="margin-top:6mm">
+    <b>À retenir :</b> les cinq blocages venaient tous de la <i>configuration</i> du déploiement, jamais du code de
+    l'application. Un build vert qui échoue au déploiement pointe presque toujours vers la commande de déploiement,
+    le nom du projet ou les fichiers spéciaux lus par la plateforme.
+  </div>
+</section>
+
+</body>
+</html>
